@@ -23,11 +23,17 @@ test("server-renders the Celephais Labs portfolio", async () => {
 	assert.match(html, /Engineering for/);
 	assert.match(html, /SailCat VPN/);
 	assert.match(html, /Geant4 &amp; MEGAlib/);
-	assert.match(html, /Previously consulted for/);
+	assert.match(html, /Previously consulted for science and research organisations/);
+	assert.match(html, /Industry and logistics companies/);
 	assert.match(html, /Snap! Screen Translator/);
 	assert.match(html, /CRM &amp; project management/);
 	assert.match(html, /https:\/\/sailcat\.space/);
 	assert.match(html, /sailcat-icon\.png/);
+	assert.match(html, /nasa-logo\.svg/);
+	assert.match(html, /thermo-fisher-logo\.svg/);
+	assert.match(html, /axisray-logo\.png/);
+	assert.match(html, /heartboner-tattoos\.com/);
+	assert.match(html, /jpbreuer\.com\/snapscreentranslator/);
 	assert.doesNotMatch(html, /DTU Space/);
 	assert.match(html, /celephais\.labs@gmail\.com/);
 	assert.doesNotMatch(html, /codex-preview|SkeletonPreview|react-loading-skeleton/);
