@@ -1,4 +1,15 @@
-const projects = [
+import { SpaceField } from "./SpaceField";
+
+const projects: Array<{
+	number: string;
+	type: string;
+	title: string;
+	description: string;
+	tags: string[];
+	featured?: boolean;
+	logo?: string;
+	href?: string;
+}> = [
 	{
 		number: "01",
 		type: "Privacy infrastructure",
@@ -7,6 +18,8 @@ const projects = [
 			"A privacy-focused VPN service developed end to end—from the product experience to the systems required to deliver a dependable connection.",
 		tags: ["Product engineering", "Infrastructure", "UX"],
 		featured: true,
+		logo: "/sailcat-icon.png",
+		href: "https://sailcat.space",
 	},
 	{
 		number: "02",
@@ -23,6 +36,22 @@ const projects = [
 		description:
 			"Purpose-built web experiences that balance clear interaction design with maintainable, production-ready engineering.",
 		tags: ["Web development", "Product design", "Systems"],
+	},
+	{
+		number: "04",
+		type: "Language technology",
+		title: "Offline translation tools",
+		description:
+			"On-device translation workflows for captured screen content, including Snap! Screen Translator, designed for privacy and practical everyday use.",
+		tags: ["Desktop tooling", "OCR", "Privacy"],
+	},
+	{
+		number: "05",
+		type: "Business systems",
+		title: "CRM & project management",
+		description:
+			"Custom operational tools that bring client relationships, project tracking, and day-to-day workflows into one focused system.",
+		tags: ["CRM", "Workflow design", "Operations"],
 	},
 ];
 
@@ -44,14 +73,14 @@ const capabilities = [
 	},
 ];
 
-const experience = ["NASA", "Thermo Fisher Scientific", "DTU Space"];
+const experience = ["NASA", "Thermo Fisher Scientific"];
 
 export default function Home() {
 	return (
 		<main>
 			<header className="site-header">
 				<a className="brand" href="#top" aria-label="Celephais Labs home">
-					<img src="/brand-mark.png" alt="" />
+					<img src="/brand-symbol.png" alt="" />
 					<span>
 						Celephais <b>Labs</b>
 					</span>
@@ -67,6 +96,7 @@ export default function Home() {
 			</header>
 
 			<section className="hero section-shell" id="top">
+				<SpaceField />
 				<div className="hero-copy">
 					<p className="eyebrow"><span /> Independent software & scientific computing studio</p>
 					<h1>Engineering for<br />ambitious ideas.</h1>
@@ -91,13 +121,19 @@ export default function Home() {
 						<span className="satellite satellite-one" />
 						<span className="satellite satellite-two" />
 					</div>
-					<img src="/celephais-labs.png" alt="Celephais Labs" />
+					<div className="hero-identity">
+						<img src="/brand-symbol.png" alt="" />
+						<div className="hero-wordmark">
+							<strong>Celephais</strong>
+							<span>Laboratories</span>
+						</div>
+					</div>
 					<p>Software engineering · simulation · digital products</p>
 				</div>
 			</section>
 
-			<section className="experience-strip" aria-label="Selected founder experience">
-				<p>Selected founder experience</p>
+			<section className="experience-strip" aria-label="Organizations previously consulted for">
+				<p>Previously consulted for</p>
 				<div>
 					{experience.map((name) => <span key={name}>{name}</span>)}
 				</div>
@@ -121,6 +157,11 @@ export default function Home() {
 								<span>{project.number}</span>
 								<p>{project.type}</p>
 							</div>
+							{project.logo && project.href ? (
+								<a className="project-logo" href={project.href} target="_blank" rel="noreferrer" aria-label="Visit the SailCat website">
+									<img src={project.logo} alt="SailCat" />
+								</a>
+							) : null}
 							<div className="project-body">
 								<h3>{project.title}</h3>
 								<p>{project.description}</p>
@@ -167,7 +208,7 @@ export default function Home() {
 						Celephais Labs is a founder-led development company for organizations with demanding technical problems. You work directly with the person responsible for strategy, architecture, and delivery—without layers of handoff.
 					</p>
 					<p>
-						The studio brings experience from software, research, and industrial environments, including work associated with NASA, Thermo Fisher Scientific, and DTU Space.
+						Before forming Celephais Labs, the founder worked as a consultant for organizations including NASA and Thermo Fisher Scientific.
 					</p>
 					<div className="principles">
 						<div><span>01</span><strong>Understand the system</strong><p>Clarify the problem, constraints, and measure of success.</p></div>
@@ -178,18 +219,22 @@ export default function Home() {
 			</section>
 
 			<section className="contact-section section-shell">
-				<div className="contact-orbit" aria-hidden="true"><span /></div>
-				<p className="eyebrow"><span /> Start a conversation</p>
-				<h2>Have a difficult idea<br />worth building?</h2>
-				<p>Tell us what you are working on. We will reply with a clear view of where Celephais Labs can help.</p>
-				<a className="button button-primary" href="mailto:celephais.labs@gmail.com?subject=Project%20enquiry">
-					celephais.labs@gmail.com <span aria-hidden="true">↗</span>
-				</a>
+				<div className="contact-copy">
+					<p className="eyebrow"><span /> Start a conversation</p>
+					<h2>Have a difficult idea<br />worth building?</h2>
+					<p>Tell us what you are working on. We will reply with a clear view of where Celephais Labs can help.</p>
+					<a className="button button-primary" href="mailto:celephais.labs@gmail.com?subject=Project%20enquiry">
+						celephais.labs@gmail.com <span aria-hidden="true">↗</span>
+					</a>
+				</div>
+				<div className="contact-visual" aria-hidden="true">
+					<img src="/contact-globe.png" alt="" />
+				</div>
 			</section>
 
 			<footer>
 				<a className="brand" href="#top" aria-label="Back to top">
-					<img src="/brand-mark.png" alt="" />
+					<img src="/brand-symbol.png" alt="" />
 					<span>Celephais <b>Labs</b></span>
 				</a>
 				<p>Founder-led software engineering & scientific computing.</p>
