@@ -34,9 +34,9 @@ const projects: Array<{
 	{
 		number: "03",
 		type: "Digital products",
-		title: "Websites for artists",
+		title: "Websites for artists, teams, events & professionals",
 		description:
-			"Distinctive portfolio and booking experiences for independent creatives, including Art by Heart Boner Tattoos in Hiroshima.",
+			"Distinctive portfolio, booking, and informational websites for creatives, teams, events, and independent professionals—including Art by Heart Boner Tattoos in Hiroshima.",
 		tags: ["Web development", "Product design", "Systems"],
 		href: "https://heartboner-tattoos.com/",
 		linkLabel: "View Heart Boner Tattoos",
@@ -158,8 +158,8 @@ export default function Home() {
 							<a className="brand-tile" href="https://www.thermofisher.com/" target="_blank" rel="noreferrer" aria-label="Thermo Fisher Scientific">
 								<img className="thermo-logo" src="/thermo-fisher-logo.svg" alt="Thermo Fisher Scientific" />
 							</a>
-							<a className="brand-tile brand-name brand-name-long" href="https://www.esa.int/" target="_blank" rel="noreferrer">
-								European Space Agency
+							<a className="brand-tile esa-tile" href="https://www.esa.int/" target="_blank" rel="noreferrer" aria-label="European Space Agency">
+								<img className="esa-logo" src="/esa-logo.jpg" alt="European Space Agency" />
 							</a>
 						</div>
 					</div>

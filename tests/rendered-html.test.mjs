@@ -27,6 +27,8 @@ test("server-renders the Celephais Labs portfolio", async () => {
 	assert.match(html, /Industry and logistics companies/);
 	assert.match(html, /European Space Agency/);
 	assert.match(html, /https:\/\/www\.esa\.int\//);
+	assert.match(html, /esa-logo\.jpg/);
+	assert.match(html, /Websites for artists, teams, events &amp; professionals/);
 	assert.match(html, /Snap! Screen Translator/);
 	assert.match(html, /CRM &amp; project management/);
 	assert.match(html, /https:\/\/sailcat\.space/);
