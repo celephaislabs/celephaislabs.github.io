@@ -158,6 +158,9 @@ export default function Home() {
 							<a className="brand-tile" href="https://www.thermofisher.com/" target="_blank" rel="noreferrer" aria-label="Thermo Fisher Scientific">
 								<img className="thermo-logo" src="/thermo-fisher-logo.svg" alt="Thermo Fisher Scientific" />
 							</a>
+							<a className="brand-tile brand-name brand-name-long" href="https://www.esa.int/" target="_blank" rel="noreferrer">
+								European Space Agency
+							</a>
 						</div>
 					</div>
 					<div className="experience-row">
@@ -248,7 +251,7 @@ export default function Home() {
 						Celephais Labs is a founder-led development company for organizations with demanding technical problems. You work directly with the person responsible for strategy, architecture, and delivery—without layers of handoff.
 					</p>
 					<p>
-						Before forming Celephais Labs, the founder consulted across science, research, industry, and logistics—including NASA, Thermo Fisher Scientific, Maersk, and Axis Ray International Trading.
+						Before forming Celephais Labs, the founder consulted across science, research, industry, and logistics—including NASA, the European Space Agency, Thermo Fisher Scientific, Maersk, and Axis Ray International Trading.
 					</p>
 					<div className="principles">
 						<div><span>01</span><strong>Understand the system</strong><p>Clarify the problem, constraints, and measure of success.</p></div>
