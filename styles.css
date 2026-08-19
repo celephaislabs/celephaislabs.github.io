@@ -421,6 +421,11 @@ h1 {
 	max-height: 72px;
 }
 
+.brand-tile .microsoft-logo {
+	width: 164px;
+	max-height: 42px;
+}
+
 .brand-name {
 	color: var(--ink-soft);
 	font-size: 24px;
