@@ -1,14 +1,11 @@
 # Celephais Labs
 
-The company website for Celephais Laboratories: a founder-led software engineering and scientific computing studio.
+Static company website for Celephais Laboratories.
 
-## Development
+## Local preview
 
 ```bash
-npm install
-npm run dev
-npm run build
-npm test
+python3 -m http.server 8000
 ```
 
-The site is built with vinext and deployed through OpenAI Sites.
+The production site is plain HTML, CSS, and JavaScript published directly from the root of the `main` branch through GitHub Pages. There is no package installation or build step.
