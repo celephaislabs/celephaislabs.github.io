@@ -9,8 +9,8 @@
 	const form = document.getElementById("contact-form");
 	if (form instanceof HTMLFormElement) {
 		const status = document.getElementById("contact-form-status");
-		const button = form.querySelector("button[type='submit']");
-		const label = form.querySelector(".contact-submit-label");
+		const sourceUrl = document.getElementById("contact-form-url");
+		const nextUrl = document.getElementById("contact-form-next");
 
 		const setStatus = (kind, message) => {
 			if (status) {
@@ -20,58 +20,38 @@
 			}
 		};
 
-		form.addEventListener("submit", async (event) => {
-			event.preventDefault();
+		const currentUrl = new URL(window.location.href);
+		const sent = currentUrl.searchParams.get("sent") === "1";
+		if (sent) {
+			setStatus("success", "Thank you. Your message has been sent.");
+			currentUrl.searchParams.delete("sent");
+			history.replaceState(null, "", `${currentUrl.pathname}${currentUrl.search}#contact`);
+		}
 
+		form.addEventListener("submit", (event) => {
 			const data = new FormData(form);
 			if (data.get("_honey")) {
+				event.preventDefault();
 				form.reset();
 				setStatus("success", "Thank you. Your message has been sent.");
 				return;
 			}
 
-			const endpoint = form.dataset.ajaxEndpoint;
-			if (!endpoint) {
-				form.submit();
-				return;
+			// Use a normal browser form POST instead of fetch/AJAX. This avoids
+			// cross-origin/CORS failures and lets FormSubmit handle activation
+			// and CAPTCHA normally.
+			const returnUrl = new URL(window.location.href);
+			returnUrl.search = "?sent=1";
+			returnUrl.hash = "contact";
+			const pageUrl = new URL(window.location.href);
+			pageUrl.search = "";
+			pageUrl.hash = "contact";
+
+			if (sourceUrl instanceof HTMLInputElement) {
+				sourceUrl.value = pageUrl.href;
 			}
-
-			if (button instanceof HTMLButtonElement) {
-				button.disabled = true;
-			}
-			if (label) {
-				label.textContent = "Sending…";
-			}
-			setStatus("success", "");
-
-			try {
-				const response = await fetch(endpoint, {
-					method: "POST",
-					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(Object.fromEntries(data.entries())),
-				});
-
-				const result = await response.json().catch(() => null);
-				const rejected = result && (result.success === false || result.success === "false");
-				if (!response.ok || rejected) {
-					throw new Error("Submission rejected");
-				}
-
-				form.reset();
-				setStatus("success", "Thank you. Your message has been sent.");
-			} catch (error) {
-				console.error("Contact form submission failed:", error);
-				setStatus("error", "The message could not be sent. Please check your connection and try again.");
-			} finally {
-				if (button instanceof HTMLButtonElement) {
-					button.disabled = false;
-				}
-				if (label) {
-					label.textContent = "Send enquiry";
-				}
+			if (nextUrl instanceof HTMLInputElement) {
+				nextUrl.value = returnUrl.href;
 			}
 		});
 	}
