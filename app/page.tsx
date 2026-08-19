@@ -1,4 +1,6 @@
 import Antigravity from "./Antigravity";
+import ContactForm from "./ContactForm";
+import "./contact-form.css";
 
 const projects: Array<{
 	number: string;
@@ -93,9 +95,10 @@ export default function Home() {
 					<a href="#work">Work</a>
 					<a href="#capabilities">Capabilities</a>
 					<a href="#studio">Studio</a>
+					<a href="#contact">Contact</a>
 				</nav>
-				<a className="header-cta" href="mailto:celephais.labs@gmail.com?subject=Project%20enquiry">
-					Start a project <span aria-hidden="true">↗</span>
+				<a className="header-cta" href="#contact">
+					Start a project <span aria-hidden="true">↓</span>
 				</a>
 			</header>
 
@@ -125,8 +128,8 @@ export default function Home() {
 							Celephais Labs builds dependable digital products, infrastructure, and simulation tools for technically demanding teams.
 						</p>
 						<div className="hero-actions">
-							<a className="button button-primary" href="mailto:celephais.labs@gmail.com?subject=Project%20enquiry">
-								Discuss your project <span aria-hidden="true">↗</span>
+							<a className="button button-primary" href="#contact">
+								Discuss your project <span aria-hidden="true">↓</span>
 							</a>
 							<a className="button button-secondary" href="#work">
 								Explore selected work <span aria-hidden="true">↓</span>
@@ -261,15 +264,17 @@ export default function Home() {
 				</div>
 			</section>
 
-			<section className="contact-section section-shell">
+			<section className="contact-section section-shell" id="contact">
 				<div className="contact-copy">
 					<p className="eyebrow"><span /> Start a conversation</p>
 					<h2>Have a difficult idea<br />worth building?</h2>
 					<p>Tell us what you are working on. We will reply with a clear view of where Celephais Labs can help.</p>
-					<a className="button button-primary" href="mailto:celephais.labs@gmail.com?subject=Project%20enquiry">
-						celephais.labs@gmail.com <span aria-hidden="true">↗</span>
-					</a>
+					<div className="contact-address">
+						<span>Direct enquiries</span>
+						<strong>celephais.labs@gmail.com</strong>
+					</div>
 				</div>
+				<ContactForm />
 				<div className="contact-visual" aria-hidden="true">
 					<img src="/contact-globe.png" alt="" />
 				</div>

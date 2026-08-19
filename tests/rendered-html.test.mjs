@@ -40,5 +40,9 @@ test("server-renders the Celephais Labs portfolio", async () => {
 	assert.match(html, /jpbreuer\.com\/snapscreentranslator/);
 	assert.doesNotMatch(html, /DTU Space/);
 	assert.match(html, /celephais\.labs@gmail\.com/);
+	assert.match(html, /id="contact"/);
+	assert.match(html, /action="https:\/\/formsubmit\.co\/celephais\.labs@gmail\.com"/);
+	assert.match(html, /name="message"/);
+	assert.doesNotMatch(html, /mailto:/i);
 	assert.doesNotMatch(html, /codex-preview|SkeletonPreview|react-loading-skeleton/);
 });
