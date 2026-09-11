@@ -520,6 +520,15 @@ h1 {
 	object-fit: contain;
 }
 
+.snap-project-logo {
+	display: block;
+	width: 88px;
+	height: 88px;
+	margin-top: 24px;
+	border-radius: 20px;
+	object-fit: contain;
+}
+
 .project-topline {
 	display: flex;
 	align-items: center;
