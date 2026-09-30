@@ -14,11 +14,11 @@ The production site is plain HTML, CSS, and JavaScript published directly from t
 
 `snapscreentranslator/` contains the current Snap website, including its iPhone setup video with 12 subtitle languages, screenshots, approved wordmark icon, support, privacy, terms, and privacy choices. Selected Work links to this copy. Personal-site Google Analytics is omitted.
 
-The September 30, 2026 preparation changes the five canonical URLs and homepage Open Graph URL to `celephaislabs.com`, and adds `/snap/` plus support/privacy/terms/privacy-choices aliases. The aliases are static HTML/JavaScript redirects with link fallbacks, not HTTP 301 redirects. Query strings and fragments are retained by the JavaScript path.
+The September 30, 2026 deployment changes the five canonical URLs and homepage Open Graph URL to `celephaislabs.com`, and adds `/snap/` plus support/privacy/terms/privacy-choices aliases. The aliases are static HTML/JavaScript redirects with link fallbacks, not HTTP 301 redirects. Query strings and fragments are retained by the JavaScript path.
 
 The individual app developer and existing support address remain explicit. The new company Apple account does not itself transfer the app. Privacy wording reflects optional ad personalization and iOS tracking permission, and removes the obsolete statement that ad services collect no data. Review it with the actual ads release and update the provider only when the app transfer takes effect.
 
-The September 30 website deployment is in progress; public GitHub Pages verification is pending. No App Store metadata or Apple account transfer has been changed. Keep the personal site available until the company deployment, store metadata, and released-app links are verified. Do not change the site's CNAME or redirect jpbreuer.com's entire domain.
+Published September 30, 2026 in commit `12b61b2f`. GitHub Pages reported a successful build, and public verification passed for all five content routes, five short aliases, seven image assets, CSS, canonical tags, tutorial links, and both company `app-ads.txt` locations. The personal domain root also serves the verified company record alongside its legacy seller. No App Store metadata or Apple account transfer has been changed. Keep the personal site available until the company deployment, store metadata, and released-app links are verified. Do not change the site's CNAME or redirect jpbreuer.com's entire domain.
 
 ### Verified company AdMob authorization
 
