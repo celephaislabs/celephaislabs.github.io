@@ -12,8 +12,22 @@ The production site is plain HTML, CSS, and JavaScript published directly from t
 
 ## Snap! Screen Translator migration
 
-`snapscreentranslator/` is a standalone copy of the current jpbreuer.com site, including its screenshots, branding, support, privacy, terms, and privacy choices. Selected Work links to this copy.
+`snapscreentranslator/` contains the current Snap website, including its iPhone setup video with 12 subtitle languages, screenshots, approved wordmark icon, support, privacy, terms, and privacy choices. Selected Work links to this copy. Personal-site Google Analytics is omitted.
 
-During preparation, jpbreuer.com remains the canonical site. Canonical tags, current support contact, legal wording, and App Store links are retained. The personal site's Google Analytics tag is omitted from the Celephais copy. Neither the personal site nor the app/store configuration is changed.
+The September 30, 2026 preparation changes the five canonical URLs and homepage Open Graph URL to `celephaislabs.com`, and adds `/snap/` plus support/privacy/terms/privacy-choices aliases. The aliases are static HTML/JavaScript redirects with link fallbacks, not HTTP 301 redirects. Query strings and fragments are retained by the JavaScript path.
 
-When the Celephais account is active, review legal ownership and support details, switch canonical and Open Graph URLs to celephaislabs.com, update store metadata and in-app website links, and configure company analytics if needed. Before changing the store developer website, confirm the correct publisher authorization at the new domain's root `/app-ads.txt`; the mirrored subdirectory file alone is insufficient. Redirects from the old site should only be introduced as part of that later cutover.
+The individual app developer and existing support address remain explicit. The new company Apple account does not itself transfer the app. Privacy wording reflects optional ad personalization and iOS tracking permission, and removes the obsolete statement that ad services collect no data. Review it with the actual ads release and update the provider only when the app transfer takes effect.
+
+The September 30 website deployment is in progress; public GitHub Pages verification is pending. No App Store metadata or Apple account transfer has been changed. Keep the personal site available until the company deployment, store metadata, and released-app links are verified. Do not change the site's CNAME or redirect jpbreuer.com's entire domain.
+
+### Verified company AdMob authorization
+
+The Celephais Labs AdMob account was checked directly on September 30, 2026. Its publisher is `pub-7634328471959505`, and the registered Snap iOS app ID is `ca-app-pub-7634328471959505~3930566711`. The exact seller record is:
+
+```text
+google.com, pub-7634328471959505, DIRECT, f08c47fec0942fa0
+```
+
+The record is maintained in repository-root `app-ads.txt` and `snapscreentranslator/app-ads.txt`. AdMob discovers it at `https://celephaislabs.com/app-ads.txt`. The same record is appended at `https://jpbreuer.com/app-ads.txt` while that domain remains the App Store developer website; its existing legacy seller record is retained. Pending `.example` files have been removed. Public HTTP availability and AdMob crawler verification are separate checks; confirm the latter in AdMob before relying on production serving.
+
+The canonical source and detailed deployment/store mapping are maintained in `/Users/jpbreuer/Scripts/Translatte_old/SnapScreenTranslator/website/README.md`. Copy only the named marketing content and the `domain-root/snap/` alias directory from there; the README is not a marketing-page asset. Deploy `domain-root/app-ads.txt` to the repository root too. Website publishing and App Store transfer are separate operations.
