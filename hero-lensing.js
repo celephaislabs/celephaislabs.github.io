@@ -28,6 +28,7 @@
 			x: random() * width, y: random() * height,
 			r: .35 + Math.pow(random(), 5) * 1.55,
 			alpha: .2 + random() * .7, phase: random() * Math.PI * 2,
+			depth: .3 + (seed % 997) / 997 * .7,
 			color: ["#f0f2f6", "#f0f2f6", "#b8d9ff", "#8bbcff", "#ffd49a", "#ffab87"][Math.floor(random() * 6)],
 		}));
 		galaxyLight = [];
@@ -53,15 +54,24 @@
 				});
 			}
 		}
-		// A broad diagonal dust lane, built from faint light samples so it lenses too.
-		const dust = Array.from({ length: 1800 }, () => {
+		// Overlapping dust wisps span the sky; each light sample lenses independently.
+		const dust = Array.from({ length: 3000 }, (_, i) => {
 			const u = random();
-			const scatter = (random() + random() + random() - 1.5) * height * .13;
+			const lane = i % 3;
+			const scatter = (random() + random() + random() - 1.5) * height * .20;
+			const centre = lane === 0 ? .78 - .58 * u + .045 * Math.sin(u * 9)
+				: lane === 1 ? .22 + .52 * u + .06 * Math.sin(u * 7 + 1)
+					: .48 + .23 * Math.sin(u * 5 + 2);
+			// Smooth knots and gaps along each wisp, fading toward its edges.
+			const knots = .5 + .27 * Math.sin(u * 19 + lane * 2.1)
+				+ .17 * Math.sin(u * 43 + lane * 4.3);
+			const intensity = (.65 + 2.1 * Math.pow(Math.max(0, knots), 2))
+				* (.35 + .65 * Math.exp(-Math.pow(scatter / (height * .16), 2)));
 			return {
 				x: u * width,
-				y: height * (.78 - .58 * u + .045 * Math.sin(u * 9)) + scatter,
+				y: height * centre + scatter,
 				r: 2 + random() * 5,
-				alpha: .009 + random() * .012,
+				alpha: ((lane === 0 ? .009 : .006) + random() * .010) * intensity,
 				color: random() > .5 ? "#7e86cb" : "#7599c7",
 				dust: true, phase: 0,
 			};
@@ -74,7 +84,7 @@
 		if (motion.matches) render(0);
 	}
 	// A tapered annular ribbon follows the lens curvature instead of a straight ellipse.
-	function drawImage(radius, angle, thickness, stretch) {
+	function drawImage(radius, angle, thickness, stretch, fineArc = false) {
 		ctx.beginPath();
 		if (stretch < 1.25 || radius < 1) {
 			ctx.arc(lens.x + Math.cos(angle) * radius, lens.y + Math.sin(angle) * radius,
@@ -86,7 +96,8 @@
 				for (let i = 0; i <= segments; i++) {
 					const t = side === 1 ? -1 + 2 * i / segments : 1 - 2 * i / segments;
 					const a = angle + t * halfAngle;
-					const r = radius + side * thickness * Math.sqrt(Math.max(0, 1 - t * t));
+					const taper = Math.pow(Math.max(0, 1 - t * t), fineArc ? 1.5 : .5);
+					const r = radius + side * thickness * taper;
 					const x = lens.x + Math.cos(a) * r, y = lens.y + Math.sin(a) * r;
 					if (side === 1 && i === 0) ctx.moveTo(x, y);
 					else ctx.lineTo(x, y);
@@ -101,8 +112,12 @@
 		const radius = Math.min(width, height) * .15 * strength;
 		const radiusSquared = radius * radius;
 		for (const star of skyLight) {
-			const drift = motion.matches || star.galaxy || star.dust ? 0 : Math.sin(time * .000035 + star.phase) * 3;
-			const sx = star.x + drift, sy = star.y;
+			// Slow shared parallax keeps galaxies coherent while foreground stars move more.
+			const depth = star.galaxy ? .12 : star.dust ? .22 : star.depth;
+			const seconds = time / 1000;
+			const driftX = motion.matches ? 0 : depth * (Math.sin(seconds * .065) * 10 + Math.sin(seconds * .027) * 4);
+			const driftY = motion.matches ? 0 : depth * (Math.cos(seconds * .049) - 1) * 7;
+			const sx = star.x + driftX, sy = star.y + driftY;
 			const dx = sx - lens.x, dy = sy - lens.y;
 			const distance = Math.max(.1, Math.hypot(dx, dy));
 			// Point-mass lens equation: an outer image and a faint inner image.
@@ -116,12 +131,16 @@
 			const alignment = star.galaxy ? Math.exp(-distance * distance / (radiusSquared * .7 + 1)) : 0;
 			const brightness = 1 + alignment * 2;
 			ctx.globalAlpha = Math.min(.85, star.alpha * twinkle * brightness);
-			const stretch = 1 + Math.min(28, radiusSquared / (distance * distance + 36)) * influence;
-			drawImage(mapped, angle, star.r, stretch);
+			const pointStar = !star.galaxy && !star.dust;
+			const lensStretch = Math.min(28, radiusSquared / (distance * distance + 36)) * influence;
+			// Preserve the full starfield and broad lensing, with tapered stellar arcs.
+			const thickness = star.r;
+			const stretch = 1 + lensStretch;
+			drawImage(mapped, angle, thickness, stretch, pointStar);
 			if (radius > 1 && distance < radius * 3.5) {
 				const inner = radiusSquared / outer;
 				ctx.globalAlpha = Math.min(.7, star.alpha * .42 * influence * brightness);
-				drawImage(inner, angle + Math.PI, Math.max(.3, star.r * .65), stretch);
+				drawImage(inner, angle + Math.PI, Math.max(.3, star.r * .65), stretch, pointStar);
 			}
 		}
 		if (radius > 1) {
