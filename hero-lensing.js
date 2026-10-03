@@ -10,20 +10,34 @@
 	let visible = true, active = false, strength = 0;
 	let lastPointerMove = -Infinity, wanderTime = 0;
 	const target = { x: 0, y: 0 }, lens = { x: 0, y: 0 };
-	let seed = 7219;
+	const skySeed = crypto.getRandomValues(new Uint32Array(1))[0];
+	let seed = skySeed;
 	const random = () => {
 		seed = (seed * 1664525 + 1013904223) >>> 0;
 		return seed / 4294967296;
 	};
 	function resize() {
 		const rect = hero.getBoundingClientRect();
+		const oldWidth = width, oldHeight = height;
 		width = rect.width;
 		height = rect.height;
 		const ratio = Math.min(devicePixelRatio || 1, 2);
 		canvas.width = Math.round(width * ratio);
 		canvas.height = Math.round(height * ratio);
 		ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-		seed = 7219;
+		if (skyLight.length) {
+			for (const light of skyLight) {
+				light.x *= width / oldWidth;
+				light.y *= height / oldHeight;
+			}
+			target.x *= width / oldWidth;
+			target.y *= height / oldHeight;
+			lens.x *= width / oldWidth;
+			lens.y *= height / oldHeight;
+			if (motion.matches) render(0);
+			return;
+		}
+		seed = skySeed;
 		stars = Array.from({ length: Math.min(2400, Math.round(width * height / 580)) }, () => ({
 			x: random() * width, y: random() * height,
 			r: .35 + Math.pow(random(), 5) * 1.55,
@@ -33,9 +47,23 @@
 		}));
 		galaxyLight = [];
 		const count = Math.max(7, Math.min(14, Math.round(width * height / 90000)));
+		const centres = [];
 		for (let g = 0; g < count; g++) {
-			const cx = width * (.08 + random() * .84), cy = height * (.13 + random() * .75);
-			const size = 18 + random() * 24, rotation = random() * Math.PI * 2;
+			const size = Math.min(18 + random() * 24, width * .06);
+			let cx, cy, placed = false;
+			for (let attempt = 0; attempt < 200; attempt++) {
+				cx = width * (.08 + random() * .84);
+				cy = height * (.13 + random() * .75);
+				if (centres.every(other => Math.hypot(cx - other.x, cy - other.y)
+					> size + other.size + Math.max(45, Math.min(width, height) * .075))) {
+					placed = true;
+					break;
+				}
+			}
+			// Prefer fewer galaxies over crowding a small viewport.
+			if (!placed) continue;
+			centres.push({ x: cx, y: cy, size });
+			const rotation = random() * Math.PI * 2;
 			const type = g % 3; // Spiral, elliptical, and an almost edge-on disk.
 			const flatten = type === 2 ? .16 : type === 1 ? .65 : .55 + random() * .3;
 			for (let i = 0; i < 230; i++) {
