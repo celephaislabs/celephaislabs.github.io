@@ -6,7 +6,7 @@
 	<title>Privacy Policy | Snap! Screen Translator</title>
 	<meta
 		name="description"
-		content="Privacy Policy for Snap! Screen Translator, covering local screenshot translation, support email, store purchase state, advertising, and offline model storage."
+		content="Privacy Policy for Snap! Screen Translator, covering on-device translation, ML Kit diagnostics, the ad-free welcome period, advertising choices, purchases, and support."
 	/>
 	<link rel="canonical" href="https://celephaislabs.com/snapscreentranslator/privacy/" />
 	<link rel="icon" href="../assets/fish-app-icon-1024.png" />
@@ -40,7 +40,7 @@
 				Snap! Screen Translator is designed as a private mobile utility. Normal translation use is centered on local screenshot text recognition, local translation workflows, and store-managed purchase access.
 			</p>
 			<p class="page-note">
-				Short version: the app does not require an account and may show free-tier ads. Subscribers do not see ads while their subscription is active.
+				The app does not require an account. Translation content is processed on your device, while Google ML Kit sends diagnostic and usage information to Google. The welcome period and active subscriptions remove ads; they do not disable ML Kit diagnostics.
 			</p>
 		</section>
 
@@ -72,6 +72,8 @@
 						<li>Translated text and layout information used to render the translated preview.</li>
 						<li>Your selected target language, source language mode, appearance setting, shortcut setup state, and offline model choices.</li>
 						<li>Subscription entitlement state provided through Apple or Google store systems so the app can determine access.</li>
+						<li>Local welcome-period start and end dates used to provide ad-free access.</li>
+						<li>ML Kit diagnostic and usage information, including installation identifiers, device and app information, performance, errors, and configured translation languages, as explained below.</li>
 						<li>Ad consent state and limited advertising identifiers or advertising data used by Google Mobile Ads when ads are enabled.</li>
 					</ul>
 				</article>
@@ -79,7 +81,13 @@
 				<article class="legal-panel">
 					<h2>2. Advertising and Tracking</h2>
 					<p>
-						The free tier may show interstitial ads through Google Mobile Ads, with consent managed through Google User Messaging Platform. Personalized Ads is off by default. On iPhone, enabling it may request Apple tracking permission; personalization also depends on your consent choices and device settings. You can continue translating if you decline tracking. We do not send screenshot images, recognized text, translated text, source language, or target language to advertising services for targeting.
+						Where advertising is enabled, the free tier may show interstitial ads through Google Mobile Ads, with consent managed through Google User Messaging Platform. Advertising availability can differ between iPhone and Android releases. Personalized Ads is off by default. On iPhone, enabling it may request Apple tracking permission; personalization also depends on your consent choices and device settings. You can continue translating if you decline tracking. We do not send screenshot images, recognized text, translated text, source language, or target language to advertising services for targeting.
+					</p>
+					<p>
+						Snap 1.5.5 introduces a 21-day ad-free welcome period for new users and existing users when they first open this update. It requires no payment, starts no subscription, and causes no automatic charge. Its original end date remains the same after app restarts and updates. When it ends, you can keep translating for free with occasional ads where available, or choose a subscription. Existing paid subscriptions continue on their store-managed terms.
+					</p>
+					<p>
+						During the welcome period or an active subscription, Snap does not request or show ads, initialize the advertising SDK, or request ad consent or tracking permission. Settings hides Personalized Ads, Ad Privacy Choices, and Report an Ad during that time. These controls become available when the welcome period has ended and no subscription is active. ML Kit diagnostics are separate from advertising and may still be sent during ad-free use.
 					</p>
 					<p>
 						When ads are enabled, Google and any configured advertising partners may process IP addresses, device identifiers where permitted, ad impressions and interactions, and diagnostic or performance information to deliver, measure, and protect advertising. Non-personalized ads can still involve this information. See <a href="https://policies.google.com/technologies/ads">Google&apos;s advertising privacy information</a>.
@@ -93,22 +101,30 @@
 						<li>To translate text and display the translated preview.</li>
 						<li>To remember local preferences such as target language, appearance, and offline model state.</li>
 						<li>To confirm subscription access, restore purchases, or show current access status.</li>
+						<li>To maintain the welcome-period dates and remaining ad-free time.</li>
+						<li>For Google to diagnose, maintain, and improve ML Kit and understand its use.</li>
 						<li>To show free-tier ads, honor consent choices, and remove ads for active subscribers.</li>
 						<li>To respond to support requests you send by email.</li>
 					</ul>
 				</article>
 
 				<article class="legal-panel">
-					<h2>4. On-Device Processing</h2>
+					<h2 id="ml-kit-diagnostics">4. On-Device Translation and ML Kit Diagnostics</h2>
 					<p>
 						Snap is designed around on-device screenshot translation. Screenshots, recognized text, and translated text are intended to remain on your device during normal use unless you choose to share output using system sharing tools or include information in a support email.
+					</p>
+					<p>
+						Google ML Kit processes translation input and output on your device; it does not send that content to Google servers. ML Kit separately sends diagnostic and usage data to Google, including per-installation identifiers, device and app details, performance measurements, errors, API configuration, model events, and configured source and destination languages. On Android, the SDK may also report feature input and output sizes. These metrics are not the screenshot images or the text being translated.
+					</p>
+					<p>
+						ML Kit can contact Google for model downloads, updates, and configuration information, using supporting Firebase services for installation and configuration diagnostics. Translation can work offline once its language models are downloaded; this does not mean the app makes no network requests when connected. Ad consent, Apple tracking permission, the welcome period, and subscriptions do not turn off this separate ML Kit processing. Snap does not currently provide a separate switch for ML Kit diagnostics. See <a href="https://developers.google.com/ml-kit/terms">Google&apos;s ML Kit privacy information</a> and its <a href="https://developers.google.com/ml-kit/ios-data-disclosure">iOS</a> and <a href="https://developers.google.com/ml-kit/android-data-disclosure">Android data disclosures</a>.
 					</p>
 				</article>
 
 				<article class="legal-panel">
 					<h2>5. Local Storage and Retention</h2>
 					<p>
-						The app may store preferences, subscription access state, shortcut setup state, offline model state, and similar operational settings on your device. Offline language models are stored locally until you remove them in the app or remove the app from your device.
+						The app may store preferences, subscription access state, welcome-period dates, shortcut setup state, offline model state, and similar operational settings on your device. Offline language models are stored locally until you remove them in the app or remove the app from your device.
 					</p>
 					<p>
 						Screenshots passed into the translation flow are intended to be retained only as needed to complete the requested translation workflow.
@@ -141,7 +157,7 @@
 				<article class="legal-panel">
 					<h2>9. Sharing</h2>
 					<p>
-						We may disclose information only when necessary to comply with law, enforce rights, protect users, respond to a request you make, or work with platform providers such as Apple and Google for purchases, app distribution, consent, and advertising.
+						We may disclose information when necessary to comply with law, enforce rights, protect users, respond to a request you make, or work with platform providers such as Apple and Google for purchases, app distribution, model delivery, diagnostics, consent, and advertising as described in this policy.
 					</p>
 				</article>
 
@@ -152,7 +168,7 @@
 						<li>Remove downloaded offline models inside the app.</li>
 						<li>Uninstall the app to remove local app data according to platform behavior.</li>
 						<li>Manage or cancel subscriptions through your Apple or Google account settings.</li>
-						<li>Use Settings &gt; Personalized Ads and Ad Privacy Choices to manage ad consent. On iPhone, you can also review tracking permission in iOS Settings &gt; Privacy &amp; Security &gt; Tracking.</li>
+						<li>When the welcome period has ended and you have no active subscription, use Settings &gt; Personalized Ads and Ad Privacy Choices to manage ad consent. On iPhone, you can also review tracking permission in iOS Settings &gt; Privacy &amp; Security &gt; Tracking. These ad controls do not control ML Kit diagnostics.</li>
 						<li>Contact support with privacy questions or requests.</li>
 					</ul>
 				</article>
