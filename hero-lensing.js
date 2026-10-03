@@ -64,21 +64,53 @@
 			if (!placed) continue;
 			centres.push({ x: cx, y: cy, size });
 			const rotation = random() * Math.PI * 2;
-			const type = g % 3; // Spiral, elliptical, and an almost edge-on disk.
-			const flatten = type === 2 ? .16 : type === 1 ? .65 : .55 + random() * .3;
+			const type = g % 5; // Spiral, elliptical, edge-on, barred spiral, and irregular.
+			const flatten = type === 2 ? .10 + random() * .12 : .45 + random() * .5;
+			const arms = random() > .6 ? 3 : 2;
+			const winding = 3.5 + random() * 4;
+			const coreSize = .12 + random() * .18;
+			const luminosity = .75 + random() * .65;
+			const palette = ["#9dbdff", "#c0b3f3", "#9fd8dd"][Math.floor(random() * 3)];
 			for (let i = 0; i < 230; i++) {
 				const core = i < 65;
-				const r = core ? Math.pow(random(), 1.8) * size * .22 : Math.sqrt(random()) * size;
-				const a = type === 1 || core ? random() * Math.PI * 2
-					: (i % 2) * Math.PI + r / size * 5.5 + (random() - .5) * .6;
-				const x = Math.cos(a) * r, y = Math.sin(a) * r * flatten;
+				const r = core ? Math.pow(random(), 1.8) * size * coreSize : Math.sqrt(random()) * size;
+				const a = type === 1 || type === 4 || core ? random() * Math.PI * 2
+					: (i % arms) * Math.PI * 2 / arms + r / size * winding + (random() - .5) * .6;
+				let x = Math.cos(a) * r, y = Math.sin(a) * r * flatten;
+				if (type === 3 && !core && r < size * .4) {
+					x = (random() - .5) * size * .8;
+					y *= .18;
+				}
+				if (type === 4) {
+					x += Math.sin(a * 3) * size * .12;
+					y += Math.cos(a * 2) * size * .08;
+				}
 				galaxyLight.push({
 					x: cx + x * Math.cos(rotation) - y * Math.sin(rotation),
 					y: cy + x * Math.sin(rotation) + y * Math.cos(rotation),
 					r: core ? .8 + random() * .7 : .45 + random() * .65,
-					alpha: core ? .16 + random() * .25 : .10 + random() * .18,
-					color: core || type === 1 ? "#ffdcac" : i % 7 === 0 ? "#efa5ce" : "#9dbdff",
+					alpha: (core ? .16 + random() * .25 : .10 + random() * .18) * luminosity,
+					color: core || type === 1 ? "#ffdcac" : i % 7 === 0 ? "#efa5ce" : palette,
 					galaxy: true, phase: 0,
+				});
+			}
+		}
+		// Tiny background galaxies add scale without competing with the main galaxies.
+		for (let g = 0; g < Math.min(36, Math.max(12, Math.round(width * height / 30000))); g++) {
+			const cx = width * (.04 + random() * .92), cy = height * (.10 + random() * .84);
+			const size = 2.5 + random() * 4.5;
+			if (centres.some(other => Math.hypot(cx - other.x, cy - other.y) < other.size + 25)) continue;
+			centres.push({ x: cx, y: cy, size });
+			const rotation = random() * Math.PI * 2, flatten = .25 + random() * .6;
+			const color = random() > .5 ? "#b4c5e1" : "#dfc6a8";
+			for (let i = 0; i < 32; i++) {
+				const r = Math.pow(random(), 1.4) * size, a = random() * Math.PI * 2;
+				const x = Math.cos(a) * r, y = Math.sin(a) * r * flatten;
+				galaxyLight.push({
+					x: cx + x * Math.cos(rotation) - y * Math.sin(rotation),
+					y: cy + x * Math.sin(rotation) + y * Math.cos(rotation),
+					r: .35 + random() * .35, alpha: .08 + random() * .12,
+					color, galaxy: true, distant: true, phase: 0,
 				});
 			}
 		}
@@ -98,8 +130,8 @@
 			return {
 				x: u * width,
 				y: height * centre + scatter,
-				r: 2 + random() * 5,
-				alpha: ((lane === 0 ? .009 : .006) + random() * .010) * intensity,
+				r: 4 + random() * 6,
+				alpha: ((lane === 0 ? .009 : .006) + random() * .010) * intensity * .6,
 				color: random() > .5 ? "#7e86cb" : "#7599c7",
 				dust: true, phase: 0,
 			};
@@ -135,13 +167,22 @@
 		}
 		ctx.fill();
 	}
+	function drawSoftDust(radius, angle, thickness, stretch) {
+		const opacity = ctx.globalAlpha;
+		// Overlapping low-opacity layers feather the edges without blurring the stars.
+		for (const [scale, alpha] of [[1.5, .15], [1, .3], [.55, .55]]) {
+			ctx.globalAlpha = opacity * alpha;
+			drawImage(radius, angle, thickness * scale, stretch);
+		}
+		ctx.globalAlpha = opacity;
+	}
 	function render(time) {
 		ctx.clearRect(0, 0, width, height);
 		const radius = Math.min(width, height) * .15 * strength;
 		const radiusSquared = radius * radius;
 		for (const star of skyLight) {
 			// Slow shared parallax keeps galaxies coherent while foreground stars move more.
-			const depth = star.galaxy ? .12 : star.dust ? .22 : star.depth;
+			const depth = star.distant ? .04 : star.galaxy ? .12 : star.dust ? .22 : star.depth;
 			const seconds = time / 1000;
 			const driftX = motion.matches ? 0 : depth * (Math.sin(seconds * .065) * 10 + Math.sin(seconds * .027) * 4);
 			const driftY = motion.matches ? 0 : depth * (Math.cos(seconds * .049) - 1) * 7;
@@ -164,11 +205,13 @@
 			// Preserve the full starfield and broad lensing, with tapered stellar arcs.
 			const thickness = star.r;
 			const stretch = 1 + lensStretch;
-			drawImage(mapped, angle, thickness, stretch, pointStar);
+			if (star.dust) drawSoftDust(mapped, angle, thickness, stretch);
+			else drawImage(mapped, angle, thickness, stretch, pointStar);
 			if (radius > 1 && distance < radius * 3.5) {
 				const inner = radiusSquared / outer;
 				ctx.globalAlpha = Math.min(.7, star.alpha * .42 * influence * brightness);
-				drawImage(inner, angle + Math.PI, Math.max(.3, star.r * .65), stretch, pointStar);
+				if (star.dust) drawSoftDust(inner, angle + Math.PI, star.r * .65, stretch);
+				else drawImage(inner, angle + Math.PI, Math.max(.3, star.r * .65), stretch, pointStar);
 			}
 		}
 		if (radius > 1) {
