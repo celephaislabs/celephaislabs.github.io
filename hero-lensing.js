@@ -6,7 +6,7 @@
 	const ctx = canvas.getContext("2d");
 	if (!ctx) return;
 	const motion = matchMedia("(prefers-reduced-motion: reduce)");
-	let width = 1, height = 1, stars = [], galaxyLight = [], frame = 0, previous = 0;
+	let width = 1, height = 1, stars = [], galaxyLight = [], skyLight = [], frame = 0, previous = 0;
 	let visible = true, active = false, strength = 0;
 	let lastPointerMove = -Infinity, wanderTime = 0;
 	const target = { x: 0, y: 0 }, lens = { x: 0, y: 0 };
@@ -53,6 +53,20 @@
 				});
 			}
 		}
+		// A broad diagonal dust lane, built from faint light samples so it lenses too.
+		const dust = Array.from({ length: 1800 }, () => {
+			const u = random();
+			const scatter = (random() + random() + random() - 1.5) * height * .13;
+			return {
+				x: u * width,
+				y: height * (.78 - .58 * u + .045 * Math.sin(u * 9)) + scatter,
+				r: 2 + random() * 5,
+				alpha: .009 + random() * .012,
+				color: random() > .5 ? "#7e86cb" : "#7599c7",
+				dust: true, phase: 0,
+			};
+		});
+		skyLight = [...dust, ...galaxyLight, ...stars];
 		if (!active) {
 			target.x = lens.x = width * .73;
 			target.y = lens.y = height * .42;
@@ -86,8 +100,8 @@
 		ctx.clearRect(0, 0, width, height);
 		const radius = Math.min(width, height) * .15 * strength;
 		const radiusSquared = radius * radius;
-		for (const star of [...galaxyLight, ...stars]) {
-			const drift = motion.matches || star.galaxy ? 0 : Math.sin(time * .000035 + star.phase) * 3;
+		for (const star of skyLight) {
+			const drift = motion.matches || star.galaxy || star.dust ? 0 : Math.sin(time * .000035 + star.phase) * 3;
 			const sx = star.x + drift, sy = star.y;
 			const dx = sx - lens.x, dy = sy - lens.y;
 			const distance = Math.max(.1, Math.hypot(dx, dy));
@@ -96,14 +110,17 @@
 			const influence = Math.exp(-distance * distance / (radiusSquared * 32 + 1));
 			const mapped = distance + (outer - distance) * influence;
 			const angle = Math.atan2(dy, dx);
-			const twinkle = motion.matches || star.galaxy ? 1 : .88 + .12 * Math.sin(time * .0008 + star.phase);
+			const twinkle = motion.matches || star.galaxy || star.dust ? 1 : .88 + .12 * Math.sin(time * .0008 + star.phase);
 			ctx.fillStyle = star.color;
-			ctx.globalAlpha = star.alpha * twinkle;
+			// Near alignment, galaxy images brighten into more visible arcs.
+			const alignment = star.galaxy ? Math.exp(-distance * distance / (radiusSquared * .7 + 1)) : 0;
+			const brightness = 1 + alignment * 2;
+			ctx.globalAlpha = Math.min(.85, star.alpha * twinkle * brightness);
 			const stretch = 1 + Math.min(28, radiusSquared / (distance * distance + 36)) * influence;
 			drawImage(mapped, angle, star.r, stretch);
 			if (radius > 1 && distance < radius * 3.5) {
 				const inner = radiusSquared / outer;
-				ctx.globalAlpha = star.alpha * .42 * influence;
+				ctx.globalAlpha = Math.min(.7, star.alpha * .42 * influence * brightness);
 				drawImage(inner, angle + Math.PI, Math.max(.3, star.r * .65), stretch);
 			}
 		}
