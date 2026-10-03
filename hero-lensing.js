@@ -8,7 +8,10 @@
 	const motion = matchMedia("(prefers-reduced-motion: reduce)");
 	let width = 1, height = 1, stars = [], galaxyLight = [], skyLight = [], frame = 0, previous = 0;
 	let visible = true, active = false, strength = 0;
-	let lastPointerMove = -Infinity, wanderTime = 0;
+	let lastPointerMove = -Infinity;
+	const bounceAngle = .45 + Math.random() * .55;
+	const bounceDirection = { x: Math.cos(bounceAngle) * (Math.random() < .5 ? -1 : 1), y: Math.sin(bounceAngle) * (Math.random() < .5 ? -1 : 1) };
+	const dustLayers = [[1.5, .15], [1, .3], [.55, .55]];
 	const target = { x: 0, y: 0 }, lens = { x: 0, y: 0 };
 	const skySeed = crypto.getRandomValues(new Uint32Array(1))[0];
 	let seed = skySeed;
@@ -170,7 +173,7 @@
 	function drawSoftDust(radius, angle, thickness, stretch) {
 		const opacity = ctx.globalAlpha;
 		// Overlapping low-opacity layers feather the edges without blurring the stars.
-		for (const [scale, alpha] of [[1.5, .15], [1, .3], [.55, .55]]) {
+		for (const [scale, alpha] of dustLayers) {
 			ctx.globalAlpha = opacity * alpha;
 			drawImage(radius, angle, thickness * scale, stretch);
 		}
@@ -180,12 +183,14 @@
 		ctx.clearRect(0, 0, width, height);
 		const radius = Math.min(width, height) * .15 * strength;
 		const radiusSquared = radius * radius;
+		const seconds = time / 1000;
+		const parallaxX = motion.matches ? 0 : Math.sin(seconds * .065) * 10 + Math.sin(seconds * .027) * 4;
+		const parallaxY = motion.matches ? 0 : (Math.cos(seconds * .049) - 1) * 7;
 		for (const star of skyLight) {
 			// Slow shared parallax keeps galaxies coherent while foreground stars move more.
 			const depth = star.distant ? .04 : star.galaxy ? .12 : star.dust ? .22 : star.depth;
-			const seconds = time / 1000;
-			const driftX = motion.matches ? 0 : depth * (Math.sin(seconds * .065) * 10 + Math.sin(seconds * .027) * 4);
-			const driftY = motion.matches ? 0 : depth * (Math.cos(seconds * .049) - 1) * 7;
+			const driftX = depth * parallaxX;
+			const driftY = depth * parallaxY;
 			const sx = star.x + driftX, sy = star.y + driftY;
 			const dx = sx - lens.x, dy = sy - lens.y;
 			const distance = Math.max(.1, Math.hypot(dx, dy));
@@ -234,15 +239,27 @@
 		if (!visible || document.hidden || motion.matches) return;
 		const dt = previous ? Math.min(50, time - previous) : 16;
 		previous = time;
-		wanderTime += dt / 1000;
 		const idle = !active || time - lastPointerMove > 2200;
-		// Incommensurate waves create a smooth, bounded path with no obvious short loop.
-		const t = wanderTime * 1.25;
-		const wanderX = width * (.5 + .23 * Math.sin(t * .19 + 1.2) + .09 * Math.sin(t * .317 + .4));
-		const wanderY = height * (.48 + .20 * Math.sin(t * .157 + .1) + .08 * Math.sin(t * .283 + 2.1));
-		const ease = 1 - Math.exp(-dt / (idle ? 1800 : 115));
-		lens.x += ((idle ? wanderX : target.x) - lens.x) * ease;
-		lens.y += ((idle ? wanderY : target.y) - lens.y) * ease;
+		if (idle) {
+			const radius = Math.min(width, height) * .15 * .85;
+			const padding = radius * 1.15;
+			const speed = Math.min(width, height) * .06875;
+			lens.x += bounceDirection.x * speed * dt / 1000;
+			lens.y += bounceDirection.y * speed * dt / 1000;
+			// Reflect at the boundary, keeping the lens ring inside the hero.
+			if (lens.x < padding || lens.x > width - padding) {
+				lens.x = Math.max(padding, Math.min(width - padding, lens.x));
+				bounceDirection.x = lens.x <= padding ? Math.abs(bounceDirection.x) : -Math.abs(bounceDirection.x);
+			}
+			if (lens.y < padding || lens.y > height - padding) {
+				lens.y = Math.max(padding, Math.min(height - padding, lens.y));
+				bounceDirection.y = lens.y <= padding ? Math.abs(bounceDirection.y) : -Math.abs(bounceDirection.y);
+			}
+		} else if (!idle) {
+			const ease = 1 - Math.exp(-dt / 115);
+			lens.x += (target.x - lens.x) * ease;
+			lens.y += (target.y - lens.y) * ease;
+		}
 		strength += ((idle ? .85 : 1) - strength) * (1 - Math.exp(-dt / 350));
 		render(time);
 		frame = requestAnimationFrame(draw);
