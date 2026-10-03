@@ -520,13 +520,20 @@ h1 {
 	object-fit: contain;
 }
 
+.snap-featured {
+	background:
+		radial-gradient(circle at 23% 54%, rgba(141, 222, 255, 0.28), transparent 25%),
+		linear-gradient(145deg, #102036, #17506c);
+}
+
 .snap-project-logo {
-	display: block;
-	width: 88px;
-	height: 88px;
-	margin-top: 24px;
-	border-radius: 20px;
-	object-fit: contain;
+	border-radius: 40px;
+	overflow: hidden;
+	padding: 0;
+}
+
+.snap-project-logo img {
+	object-fit: cover;
 }
 
 .project-topline {
@@ -640,9 +647,19 @@ h1 {
 	color: var(--ink);
 }
 
-.project-featured .project-link {
+.project-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px 22px;
+	align-items: center;
+}
+
+.project-featured .project-links {
 	grid-column: 2;
 	grid-row: 4;
+}
+
+.project-featured .project-link {
 	border-color: rgba(188, 234, 255, 0.45);
 	color: var(--ice-bright);
 }
@@ -651,6 +668,19 @@ h1 {
 .project-featured .project-link:focus-visible {
 	border-color: var(--white);
 	color: var(--white);
+}
+
+.project-link-pending {
+	cursor: default;
+	border-bottom-color: transparent;
+	color: rgba(255, 255, 255, 0.6);
+}
+
+.project-link-pending > span {
+	margin-left: 4px;
+	padding: 3px 5px;
+	background: rgba(255, 255, 255, 0.1);
+	font-size: 8px;
 }
 
 .capabilities-section {
@@ -1055,7 +1085,7 @@ h1 {
 	.project-featured .project-logo,
 	.project-featured .project-body,
 	.project-featured ul,
-	.project-featured .project-link {
+	.project-featured .project-links {
 		grid-column: auto;
 		grid-row: auto;
 	}
