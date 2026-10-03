@@ -6,7 +6,7 @@
 	const ctx = canvas.getContext("2d");
 	if (!ctx) return;
 	const motion = matchMedia("(prefers-reduced-motion: reduce)");
-	let width = 1, height = 1, stars = [], frame = 0, previous = 0;
+	let width = 1, height = 1, stars = [], galaxyLight = [], frame = 0, previous = 0;
 	let visible = true, active = false, strength = 0;
 	let lastPointerMove = -Infinity, wanderTime = 0;
 	const target = { x: 0, y: 0 }, lens = { x: 0, y: 0 };
@@ -28,8 +28,31 @@
 			x: random() * width, y: random() * height,
 			r: .35 + Math.pow(random(), 5) * 1.55,
 			alpha: .2 + random() * .7, phase: random() * Math.PI * 2,
-			cool: random() > .7,
+			color: ["#f0f2f6", "#f0f2f6", "#b8d9ff", "#8bbcff", "#ffd49a", "#ffab87"][Math.floor(random() * 6)],
 		}));
+		galaxyLight = [];
+		const count = Math.max(7, Math.min(14, Math.round(width * height / 90000)));
+		for (let g = 0; g < count; g++) {
+			const cx = width * (.08 + random() * .84), cy = height * (.13 + random() * .75);
+			const size = 18 + random() * 24, rotation = random() * Math.PI * 2;
+			const type = g % 3; // Spiral, elliptical, and an almost edge-on disk.
+			const flatten = type === 2 ? .16 : type === 1 ? .65 : .55 + random() * .3;
+			for (let i = 0; i < 230; i++) {
+				const core = i < 65;
+				const r = core ? Math.pow(random(), 1.8) * size * .22 : Math.sqrt(random()) * size;
+				const a = type === 1 || core ? random() * Math.PI * 2
+					: (i % 2) * Math.PI + r / size * 5.5 + (random() - .5) * .6;
+				const x = Math.cos(a) * r, y = Math.sin(a) * r * flatten;
+				galaxyLight.push({
+					x: cx + x * Math.cos(rotation) - y * Math.sin(rotation),
+					y: cy + x * Math.sin(rotation) + y * Math.cos(rotation),
+					r: core ? .8 + random() * .7 : .45 + random() * .65,
+					alpha: core ? .16 + random() * .25 : .10 + random() * .18,
+					color: core || type === 1 ? "#ffdcac" : i % 7 === 0 ? "#efa5ce" : "#9dbdff",
+					galaxy: true, phase: 0,
+				});
+			}
+		}
 		if (!active) {
 			target.x = lens.x = width * .73;
 			target.y = lens.y = height * .42;
@@ -63,8 +86,8 @@
 		ctx.clearRect(0, 0, width, height);
 		const radius = Math.min(width, height) * .15 * strength;
 		const radiusSquared = radius * radius;
-		for (const star of stars) {
-			const drift = motion.matches ? 0 : Math.sin(time * .000035 + star.phase) * 3;
+		for (const star of [...galaxyLight, ...stars]) {
+			const drift = motion.matches || star.galaxy ? 0 : Math.sin(time * .000035 + star.phase) * 3;
 			const sx = star.x + drift, sy = star.y;
 			const dx = sx - lens.x, dy = sy - lens.y;
 			const distance = Math.max(.1, Math.hypot(dx, dy));
@@ -73,8 +96,8 @@
 			const influence = Math.exp(-distance * distance / (radiusSquared * 32 + 1));
 			const mapped = distance + (outer - distance) * influence;
 			const angle = Math.atan2(dy, dx);
-			const twinkle = motion.matches ? 1 : .88 + .12 * Math.sin(time * .0008 + star.phase);
-			ctx.fillStyle = star.cool ? "#b8d9ff" : "#f0f2f6";
+			const twinkle = motion.matches || star.galaxy ? 1 : .88 + .12 * Math.sin(time * .0008 + star.phase);
+			ctx.fillStyle = star.color;
 			ctx.globalAlpha = star.alpha * twinkle;
 			const stretch = 1 + Math.min(28, radiusSquared / (distance * distance + 36)) * influence;
 			drawImage(mapped, angle, star.r, stretch);
