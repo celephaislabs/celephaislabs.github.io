@@ -35,7 +35,7 @@
 
 	<main>
 		<section class="page-hero shell">
-			<span class="eyebrow">Effective date: October 3, 2026</span>
+			<span class="eyebrow">Effective date: October 7, 2026</span>
 			<h1>Privacy Policy</h1>
 			<p>
 				Snap! Screen Translator is designed as a private mobile utility. Normal translation use is centered on local screenshot text recognition, local translation workflows, and store-managed purchase access.
@@ -111,6 +111,10 @@
 
 				<article class="legal-panel">
 					<h2 id="ml-kit-diagnostics">4. On-Device Translation and ML Kit Diagnostics</h2>
+					<h3 id="android-accessibility-capture">Optional Android Accessibility Capture</h3>
+					<p>
+						In Android versions with quick accessibility capture, Snap asks you to read a separate in-app disclosure and enable the Snap screenshot translation shortcut in Android Accessibility settings. On Android 11 and later, this service takes one screenshot only after you activate Android’s shortcut (its on-screen button or chosen volume-key shortcut) or tap Snap’s optional floating capture button, recognizes and translates the visible text locally, and shows the translated image over the app you are viewing. The screenshot may include personal information displayed in that app. Screenshot and translation content stays on your device, including the app&apos;s local result cache; Snap does not send it to advertising services or its own servers. The service ignores accessibility events and does not retrieve app UI controls, operate other apps, or continuously capture your screen. You can turn off the optional floating button in Snap, or turn off the Snap screenshot translation shortcut in Android Accessibility settings to revoke screenshot access at any time. Earlier supported Android versions use Android&apos;s screen-sharing consent instead. Apps that protect their content may prevent capture.
+					</p>
 					<p>
 						Snap is designed around on-device screenshot translation. Screenshots, recognized text, and translated text are intended to remain on your device during normal use unless you choose to share output using system sharing tools or include information in a support email.
 					</p>
@@ -128,7 +132,7 @@
 						The app may store preferences, subscription access state, welcome-period dates, shortcut setup state, offline model state, and similar operational settings on your device. Offline language models are stored locally until you remove them in the app or remove the app from your device.
 					</p>
 					<p>
-						Screenshots passed into the translation flow are intended to be retained only as needed to complete the requested translation workflow.
+						Screenshots passed into the translation flow are used to complete the requested translation and render its result. Android quick-result screenshots may remain in the app&apos;s local cache until Android or the app clears that cache, or you clear app data or uninstall the app. This cache is not uploaded by Snap. Images you deliberately save or share follow your chosen destination&apos;s retention controls.
 					</p>
 				</article>
 
@@ -166,6 +170,8 @@
 					<h2>10. Your Choices</h2>
 					<ul>
 						<li>Delete screenshots from your device using normal platform controls.</li>
+						<li>Disable Snap’s optional floating capture button in Snap Settings; turn off the Snap screenshot translation shortcut in Android Accessibility settings to revoke screenshot access.</li>
+						<li>Clear Snap&apos;s Android app cache or app data through Android settings to remove local cached result images, subject to platform behavior.</li>
 						<li>Remove downloaded offline models inside the app.</li>
 						<li>Uninstall the app to remove local app data according to platform behavior.</li>
 						<li>Manage or cancel subscriptions through your Apple or Google account settings.</li>
