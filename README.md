@@ -16,7 +16,7 @@ The production site is plain HTML, CSS, and JavaScript published directly from t
 
 The preferred host is `https://celephaislabs.com/`. On November 9, 2026, Search Console listed all seven public content pages as indexed and accepted the new sitemap with status Success and seven discovered pages. Live checks confirmed HTTP 200, matching canonicals, and no indexing blocks for every sitemap URL.
 
-The missing `www` DNS record was repaired in Namecheap with `CNAME www → celephaislabs.github.io`; authoritative nameservers, Cloudflare, and Google DNS resolved it. Search Console's live test for `http://www.celephaislabs.com/` reported “URL is available to Google”, and validation of its previous “Crawled - currently not indexed” exclusion started on November 9. GitHub Pages certificate provisioning for `www.celephaislabs.com` remains outstanding: the certificate currently covers only the apex host.
+The missing `www` DNS record was repaired in Namecheap with `CNAME www → celephaislabs.github.io`; authoritative nameservers, Cloudflare, and Google DNS resolved it. Search Console's live test for `http://www.celephaislabs.com/` reported “URL is available to Google”, and validation of its previous “Crawled - currently not indexed” exclusion started on November 9. GitHub Pages issued an approved certificate covering both `celephaislabs.com` and `www.celephaislabs.com`, expiring February 7, 2027. A live HTTPS request with certificate hostname verification confirmed that `https://www.celephaislabs.com/` returns HTTP 301 to `https://celephaislabs.com/`.
 
 ## Snap! Screen Translator migration
 
