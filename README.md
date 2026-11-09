@@ -14,7 +14,9 @@ The production site is plain HTML, CSS, and JavaScript published directly from t
 
 `robots.txt` permits crawling and declares `https://celephaislabs.com/sitemap.xml`. The sitemap lists the seven canonical public content URLs. Redirect aliases under `/snap/`, explicit `index.html` duplicates, the hero preview, and the Android app-review demonstration are intentionally omitted. The preview and review demonstration use `noindex`; crawlers must remain able to fetch them to see that directive. Google may report redirects and canonical duplicates as excluded without indicating a site error.
 
-The preferred host is `https://celephaislabs.com/`. On November 9, 2026, the apex host served successfully and redirected HTTP to HTTPS, but `www.celephaislabs.com` did not resolve in DNS. That outstanding host configuration cannot be repaired through these static files. Sitemap publication and Search Console validation require separate deployment and live verification; these source changes alone do not confirm indexing.
+The preferred host is `https://celephaislabs.com/`. On November 9, 2026, Search Console listed all seven public content pages as indexed and accepted the new sitemap with status Success and seven discovered pages. Live checks confirmed HTTP 200, matching canonicals, and no indexing blocks for every sitemap URL.
+
+The missing `www` DNS record was repaired in Namecheap with `CNAME www → celephaislabs.github.io`; authoritative nameservers, Cloudflare, and Google DNS resolved it. Search Console's live test for `http://www.celephaislabs.com/` reported “URL is available to Google”, and validation of its previous “Crawled - currently not indexed” exclusion started on November 9. GitHub Pages certificate provisioning for `www.celephaislabs.com` remains outstanding: the certificate currently covers only the apex host.
 
 ## Snap! Screen Translator migration
 
