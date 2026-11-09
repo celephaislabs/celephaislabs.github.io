@@ -10,6 +10,12 @@ python3 -m http.server 8000
 
 The production site is plain HTML, CSS, and JavaScript published directly from the root of the `main` branch through GitHub Pages. There is no package installation or build step.
 
+## Search indexing
+
+`robots.txt` permits crawling and declares `https://celephaislabs.com/sitemap.xml`. The sitemap lists the seven canonical public content URLs. Redirect aliases under `/snap/`, explicit `index.html` duplicates, the hero preview, and the Android app-review demonstration are intentionally omitted. The preview and review demonstration use `noindex`; crawlers must remain able to fetch them to see that directive. Google may report redirects and canonical duplicates as excluded without indicating a site error.
+
+The preferred host is `https://celephaislabs.com/`. On November 9, 2026, the apex host served successfully and redirected HTTP to HTTPS, but `www.celephaislabs.com` did not resolve in DNS. That outstanding host configuration cannot be repaired through these static files. Sitemap publication and Search Console validation require separate deployment and live verification; these source changes alone do not confirm indexing.
+
 ## Snap! Screen Translator migration
 
 `snapscreentranslator/` contains the current Snap website, including its iPhone setup video with 12 subtitle languages, screenshots, approved wordmark icon, support, privacy, terms, and privacy choices. Selected Work links to this copy. Personal-site Google Analytics is omitted.
